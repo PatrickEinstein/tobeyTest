@@ -10,11 +10,17 @@ const FILTERABLE_CAPITALS = [
   "Reykjavik",
 ];
 
+interface IName {
+  common: "";
+}
+interface Capital {
+  name: IName;
+}
 function App() {
   const BASE_URL = "https://restcountries.com/v3.1";
 
   const [allResponses, setAllResponses] = useState([]);
-  const [foundCapital, setFoundCapital] = useState([]);
+  const [foundCapital, setFoundCapital] = useState<Capital[]>([]);
 
   const findCapitals = async (chosenState: string) => {
     const fetchedRes = await fetch(`${BASE_URL}/capital/${chosenState}`, {
