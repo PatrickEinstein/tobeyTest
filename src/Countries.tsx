@@ -1,6 +1,13 @@
 import React from "react";
 
-const Countries = ({ countries }: { countries: any }) => {
+interface Country {
+  name: {
+    common: string;
+  };
+  capital: string;
+}
+
+const Countries = ({ countries }: { countries: Country[] }) => {
   return (
     <div>
       {countries.length > 1 &&
