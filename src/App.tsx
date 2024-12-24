@@ -11,7 +11,7 @@ const FILTERABLE_CAPITALS = [
 ];
 
 interface IName {
-  common: "";
+  common: string;
 }
 interface Capital {
   name: IName;
@@ -66,7 +66,7 @@ function App() {
 
       <div>
         <h1>Filtered City</h1>
-        <h1>{foundCapital[0]?.name?.common}</h1>
+        <h1>{foundCapital[0].name.common}</h1>
       </div>
     </div>
   );
