@@ -1,35 +1,69 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useCallback, useEffect, useState } from "react";
+import Countries from "./Countries";
+
+const FILTERABLE_CAPITALS = [
+  "Tallinn",
+  "Helsinki",
+  "Stockholm",
+  "Oslo",
+  "Copenhagen",
+  "Reykjavik",
+];
 
 function App() {
-  const [count, setCount] = useState(0)
+  const BASE_URL = "https://restcountries.com/v3.1";
+
+  const [allResponses, setAllResponses] = useState([]);
+  const [foundCapital, setFoundCapital] = useState([]);
+
+  const findCapitals = async (chosenState: string) => {
+    const fetchedRes = await fetch(`${BASE_URL}/capital/${chosenState}`, {
+      method: "GET",
+    });
+    const res = await fetchedRes.json();
+    setFoundCapital(res);
+    console.log(`capital found==>`, res);
+  };
+
+  const findAllCountry = useCallback(async () => {
+    const fetchedRes = await fetch(`${BASE_URL}/all`, {
+      method: "GET",
+    });
+    const res = await fetchedRes.json();
+    setAllResponses(res);
+    console.log(res);
+  }, []);
+
+  useEffect(() => {
+    findAllCountry();
+  }, []);
 
   return (
-    <>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+      }}
+    >
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <h1>Countries</h1>
+        <Countries countries={allResponses} />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+
+      <div>
+        <h1>Capitals (click any to item)</h1>
+        {FILTERABLE_CAPITALS.map((obj) => (
+          <h3 onClick={() => findCapitals(obj)}>{obj}</h3>
+        ))}
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+
+      <div>
+        <h1>Filtered City</h1>
+        <h1>{foundCapital[0]?.name?.common}</h1>
+      </div>
+    </div>
+  );
 }
 
-export default App
+export default App;
